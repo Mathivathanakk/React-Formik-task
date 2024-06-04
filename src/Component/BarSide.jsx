@@ -7,7 +7,7 @@ const BarSide = () => {
     {/* navbar */}
       <nav className="navbar navbar-expand-lg py-2 ">
         <div className="container">
-          <Link to="/">LIBRARY MANAGEMENT SYSTEM</Link>
+          <Link to="/dashboard">LIBRARY MANAGEMENT SYSTEM</Link>
           <button
             className="navbar-toggler"
             type="button"
