@@ -3,11 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const DashBoard = () => {
+  
   const [detail, setDetail] = useState([]);
+  // useeffect for fetching the data
   useEffect(() => {
     fetchdata();
   }, []);
-
+  
+ //fetching the data by get method using api
   const fetchdata = async () => {
     await axios
       .get("https://664de975ede9a2b556557010.mockapi.io/api/records")
@@ -16,7 +19,9 @@ const DashBoard = () => {
   };
   return (
     <>
+    {/* Dashboard */}
       <div className="container">
+        {/* Book  Record table */}
         <div>
           <div className="text-center " style={{color:"rgb(50, 34, 65)"}}>
             <h1>Book Records</h1>
@@ -40,6 +45,7 @@ const DashBoard = () => {
                 </th>
               </tr>
             </thead>
+
             <tbody>
               {detail.map((ele, i) => {
                 return (
@@ -55,7 +61,10 @@ const DashBoard = () => {
           </table>
         </div>
         </div>
+        {/* Book  Record table end */}
+        {/* Author  Record table */}
         <div>
+
           <div className="text-center "  style={{color:"rgb(50, 34, 65)"}}>
             <h1>Author Records</h1>
           </div>
@@ -88,6 +97,7 @@ const DashBoard = () => {
           </table>
           </div>
         </div>
+         {/* Author  Record table end */}
       </div>
     </>
   );

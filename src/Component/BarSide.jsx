@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 const BarSide = () => {
   return (
     <>
+    {/* navbar */}
       <nav className="navbar navbar-expand-lg py-2 ">
         <div className="container">
           <Link to="/">LIBRARY MANAGEMENT SYSTEM</Link>

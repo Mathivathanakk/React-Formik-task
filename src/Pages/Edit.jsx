@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 
 const Edit = ({ id }) => {
   const navigate = useNavigate();
+
   const [editData, setEditData] = useState({
     books: {
       title: "",
@@ -19,28 +20,44 @@ const Edit = ({ id }) => {
       biography: "",
     },
   });
-
+  // useeffect for fetching the data
   useEffect(() => {
     fetchData();
   }, []);
-
+  ////fetching the data -get by id method
   const fetchData = async () => {
     await axios
       .get(`https://664de975ede9a2b556557010.mockapi.io/api/records/${id}`)
-      .then((res) =>setEditData (res.data))
+      .then((res) =>
+        setEditData({
+          books: {
+            title: res.data.books.title,
+            author: res.data.books.author,
+            isbnnumber: res.data.books.isbnnumber,
+            publication_date: res.data.books.publication_date,
+          },
+          author: {
+            name: res.data.author.name,
+            dob: res.data.author.dob,
+            biography: res.data.author.biography,
+          },
+        })
+      )
       .catch((err) => console.log(err));
   };
 
-
+  // useeffect for fetching the data
   useEffect(() => {
     formik.setValues(editData);
   }, [editData]);
-
+  //validation schema
   const validationSchema = Yup.object({
     books: Yup.object({
       title: Yup.string().required("please enter the title"),
       author: Yup.string().required("please enter the author name"),
-      isbnnumber: Yup.string().required("ISBN Number is required"),
+      isbnnumber: Yup.string()
+        .required("ISBN Number is required")
+        .matches(/^\d{8}$/, "ISBN NUMBER MUST BE 8 DIGITS"),
       publication_date: Yup.string().required("field is empty"),
     }),
     author: Yup.object({
@@ -50,6 +67,7 @@ const Edit = ({ id }) => {
     }),
   });
 
+  //handlesubmit
   const handleSubmit = async (values) => {
     await axios
       .put(
@@ -84,8 +102,10 @@ const Edit = ({ id }) => {
       <div className="card  m-4 p-5">
         <h1 className="text-center ">EDIT YOUR RECORD</h1>
         <br />
+        {/* form start */}
         <form onSubmit={formik.handleSubmit}>
           <legend className="text-center fs-2">BOOK RECORDS</legend>
+          {/* title */}
           <div className="row text-center">
             <div className="col">
               <label htmlFor="name" className="fs-4">
@@ -96,8 +116,8 @@ const Edit = ({ id }) => {
                 type="text"
                 name="books.title"
                 id="name"
-                values={formik.values.books.title}
                 onChange={formik.handleChange}
+                value={formik.values.books.title}
                 required
               />
               {formik.errors.books?.title ? (
@@ -106,6 +126,7 @@ const Edit = ({ id }) => {
             </div>
           </div>
           <br />
+          {/* author */}
           <div className="row text-center ">
             <div className="col">
               <label htmlFor="author" className="fs-4">
@@ -117,8 +138,8 @@ const Edit = ({ id }) => {
                 type="text"
                 name="books.author"
                 id="author"
-                values={formik.values.books.author}
                 onChange={formik.handleChange}
+                value={formik.values.books.author}
               />
               {formik.errors.books?.author ? (
                 <div className="text-danger">{formik.errors.books.author}</div>
@@ -126,6 +147,7 @@ const Edit = ({ id }) => {
             </div>
           </div>
           <br />
+          {/* isbn number */}
           <div className="row text-center ">
             <div className="col">
               <label htmlFor="number" className="fs-4">
@@ -136,8 +158,8 @@ const Edit = ({ id }) => {
                 type="text"
                 name="books.isbnnumber"
                 id="number"
-                values={formik.values.books.isbnnumber}
                 onChange={formik.handleChange}
+                value={formik.values.books.isbnnumber}
               />
               {formik.errors.books?.isbnnumber ? (
                 <div className="text-danger">
@@ -147,6 +169,7 @@ const Edit = ({ id }) => {
             </div>
           </div>
           <br />
+          {/* publication_date */}
           <div className="row text-center ">
             <div className="col">
               <label htmlFor="date" className="fs-4">
@@ -157,8 +180,8 @@ const Edit = ({ id }) => {
                 type="date"
                 name="books.publication_date"
                 id="date"
-                values={formik.values.books.publication_date}
                 onChange={formik.handleChange}
+                value={formik.values.books.publication_date}
               />
               {formik.errors.books?.publication_date ? (
                 <div className="text-danger">
@@ -168,12 +191,14 @@ const Edit = ({ id }) => {
             </div>
           </div>
           <br />
+
           <div className="row">
             <div className="col">
               <legend className="text-center fs-2">AUTHOR RECORDS</legend>
             </div>
           </div>
           <br />
+          {/* author name */}
           <div className="row text-center">
             <div className="col">
               <label htmlFor="name" className="fs-4">
@@ -184,8 +209,8 @@ const Edit = ({ id }) => {
                 type="text"
                 name="author.name"
                 id="name"
-                values={formik.values.author.name}
                 onChange={formik.handleChange}
+                value={formik.values.author.name}
               />
               {formik.errors.author?.name ? (
                 <div className="text-danger">{formik.errors.author.name}</div>
@@ -193,6 +218,7 @@ const Edit = ({ id }) => {
             </div>
           </div>
           <br />
+          {/* date of birth */}
           <div className="row text-center ">
             <div className="col">
               <label htmlFor="dob" className="fs-4">
@@ -203,8 +229,8 @@ const Edit = ({ id }) => {
                 type="date"
                 name="author.dob"
                 id="dob"
-                values={formik.values.author.dob}
                 onChange={formik.handleChange}
+                value={formik.values.author.dob}
               />
               {formik.errors.author?.dob ? (
                 <div className="text-danger">{formik.errors.author.dob}</div>
@@ -212,6 +238,7 @@ const Edit = ({ id }) => {
             </div>
           </div>
           <br />
+          {/* biography */}
           <div className="row text-center ">
             <div className="col">
               <label htmlFor="biography" className="fs-4">
@@ -222,8 +249,8 @@ const Edit = ({ id }) => {
                 type="text"
                 name="author.biography"
                 id="biography"
-                values={formik.values.author.biography}
                 onChange={formik.handleChange}
+                value={formik.values.author.biography}
               />
               {formik.errors.author?.biography ? (
                 <div className="text-danger">
@@ -233,6 +260,7 @@ const Edit = ({ id }) => {
             </div>
           </div>
           <br />
+          {/* title */}
           <div className="row">
             <div className="col d-flex  justify-content-center  align-content-center ">
               <button className="btn btn-success" type="submit">
@@ -242,6 +270,7 @@ const Edit = ({ id }) => {
           </div>
           <br />
         </form>
+        {/* form end */}
       </div>
     </div>
   );
